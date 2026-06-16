@@ -49,6 +49,8 @@ I decided a bug was really fixed by combining two checks: reading the corrected 
 
 - How would you explain Streamlit "reruns" and session state to a friend who has never used Streamlit?
 
+I'd say Streamlit re-runs your whole script from top to bottom every time you interact with the page — every click, typed value, or dropdown change replays the entire file like it's loading fresh. That means any normal variable resets each time, so you can't just store the secret number in a regular variable or it gets re-randomized on every click. `st.session_state` is the fix: it's a dictionary that *survives* those reruns, so values like the secret, attempts, and history stick around between interactions. The bugs in this project came from misusing that — the secret never being re-rolled when it should be, and game state (status/history) not being cleared when starting a new game or switching difficulty, because the code forgot to reset those persistent values.
+
 ---
 
 ## 5. Looking ahead: your developer habits

@@ -25,28 +25,32 @@ It wrote the code, ran away, and now the game is unplayable.
 
 ## 📝 Document Your Experience
 
-- [ ] Describe the game's purpose.
-- [ ] Detail which bugs you found.
-- [ ] Explain what fixes you applied.
+- **Purpose:** A Streamlit number-guessing game where the player guesses a secret number within a difficulty-based range, guided by Higher/Lower hints.
+- **Bugs found:** (1) New Game didn't work; (2) range/secret ignored difficulty (showed 1–100, secret out of bounds); (3) submit took two clicks; (4) hints were backwards; (5) switching difficulty didn't reset the game.
+- **Fixes applied:** Reset state on New Game and on difficulty change; re-roll the secret to the active range and show real `low/high`; correct the high/low hints; remove the int-vs-str secret hack; refactor logic into `logic_utils.py`.
 
 ## 📸 Demo Walkthrough
 
-Describe your fixed game in numbered steps so a reader can follow along without watching a video:
+A full sample game on **Easy** (secret = **12** for this trace).
 
-1. <!-- Describe this step -->
-2. <!-- Describe this step -->
-3. <!-- Describe this step -->
-4. <!-- Describe this step -->
-5. <!-- Add more steps as needed -->
-
-**Screenshot** *(optional)*: <!-- Insert a screenshot of your fixed, winning game here -->
+1. **Launch & settings.** Run `python -m streamlit run app.py`. In the sidebar, select **Difficulty: Easy**. The sidebar updates to **Range: 1 to 20** and **Attempts allowed: 6**, and a fresh game starts automatically (attempts, history, and score reset to 0).
+2. **Starting state.** The main panel shows *"Guess a number between 1 and 20. Attempts left: 6"*. Expanding **Developer Debug Info** shows `Secret: 12`, `Attempts: 0`, `Score: 0`, `History: []` — confirming the secret is inside the 1–20 range.
+3. **Guess 1 → too low.** Type `5`, click **Submit Guess 🚀** once. Hint: **📈 Go HIGHER!** (outcome "Too Low"). Score: `0 → -5`. Attempts left: 5. History: `[5]`.
+4. **Guess 2 → too high.** Type `18`, Submit. Hint: **📉 Go LOWER!** (outcome "Too High"). Score: `-5 → 0` (the +5 even-attempt bonus). Attempts left: 4. History: `[5, 18]`.
+5. **Guess 3 → win.** Type `12`, Submit. Hint: **🎉 Correct!**, balloons animate. Final message: *"You won! The secret was 12. Final score: 60"* (win bonus `100 - 10*(3+1) = 60`). Game status becomes "won".
+6. **New Game.** Click **New Game 🔁**: status, attempts, history, and secret all reset, and the game is playable again immediately (no double-click, no frozen "already won" screen).
+7. **Switch difficulty mid-game.** Change **Difficulty** to **Normal**: the range updates to 1–100, a new in-range secret is rolled, and attempts/history/score all clear automatically — past attempts do not carry over.
 
 ## 🧪 Test Results
 
 ```
-# Paste your pytest output here, e.g.:
-# pytest tests/
-# ========================= X passed in 0.XXs =========================
+============================= test session starts ==============================
+platform darwin -- Python 3.14.6, pytest-9.1.0, pluggy-1.6.0
+collected 4 items
+
+tests/test_game_logic.py ....                                            [100%]
+
+============================== 4 passed in 0.00s ===============================
 ```
 
 ## 🚀 Stretch Features
