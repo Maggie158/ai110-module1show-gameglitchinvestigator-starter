@@ -45,9 +45,16 @@ if "secret" not in st.session_state:
 # FIX (Bug 2): AI suggested tracking the active difficulty and re-rolling the
 # secret when it changes; I verified by switching to Easy and seeing an in-range
 # secret. Also fixed the hardcoded "1 and 100" range text below to use low/high.
+# FIX (Bug 4): changing difficulty must start a fresh game, not just re-roll the
+# secret. Reset attempts/history/score/status so past attempts are cleared and a
+# new game begins automatically (previously these carried over from the old game).
 if st.session_state.get("active_difficulty") != difficulty:
     st.session_state.secret = random.randint(low, high)
     st.session_state.active_difficulty = difficulty
+    st.session_state.attempts = 0
+    st.session_state.history = []
+    st.session_state.score = 0
+    st.session_state.status = "playing"
 
 if "attempts" not in st.session_state:
     st.session_state.attempts = 1
